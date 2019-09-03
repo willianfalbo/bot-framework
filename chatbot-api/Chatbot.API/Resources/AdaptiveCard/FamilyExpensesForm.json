@@ -1,0 +1,61 @@
+{
+    "type": "AdaptiveCard",
+    "body": [
+        {
+            "type": "Container",
+            "style": "emphasis",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "horizontalAlignment": "Center",
+                    "size": "Medium",
+                    "weight": "Bolder",
+                    "text": "GASTOS FAMILIARES MENSAIS"
+                }
+            ],
+            "bleed": true
+        },
+        {
+            "type": "Input.Number",
+            "id": "FoodAndBasicCare",
+            "placeholder": "Alimentação/Higiene/Limpeza"
+        },
+        {
+            "type": "Input.Number",
+            "id": "Health",
+            "placeholder": "Saúde (remédios, plano de saúde, médicos)"
+        },
+        {
+            "type": "Input.Number",
+            "id": "Education",
+            "placeholder": "Educação"
+        },
+        {
+            "type": "Input.Number",
+            "id": "RentalAndHousing",
+            "placeholder": "Aluguel/Condomínio/Prestação da casa própria"
+        },
+        {
+            "type": "Input.Number",
+            "id": "HousingRelatedBills",
+            "placeholder": "Água/Luz/Telefone/Gás"
+        },
+        {
+            "type": "Input.Number",
+            "id": "OtherExpenses",
+            "placeholder": "Outros Gastos"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.Submit",
+            "title": "Enviar",
+            "data": {
+                "useAdaptiveCardPromptInWaterfallDialog": true
+            }
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.0",
+    "speak": "<s>Por favor, preencha os dados abaixo.</s>"
+}
