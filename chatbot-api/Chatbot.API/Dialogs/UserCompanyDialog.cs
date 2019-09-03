@@ -2,18 +2,18 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Chatbot.API.DTO;
+using Chatbot.Api.DTO;
 using Chatbot.Common.Extensions;
 using Chatbot.Common.Interfaces;
 using System.IO;
-using Chatbot.API.Extensions;
+using Chatbot.Api.Extensions;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using System.Linq;
-using Chatbot.API.Helpers;
+using Chatbot.Api.Helpers;
 using Chatbot.Model.Manager;
 
-namespace Microsoft.BotBuilderSamples
+namespace Chatbot.Api.Dialogs
 {
     public class UserCompanyDialog : CustomComponentDialog
     {
@@ -55,7 +55,7 @@ namespace Microsoft.BotBuilderSamples
             // Create an object in which to collect the user's information within the dialog.
             stepContext.Values[USER_COMPANY_STEP] = new UserCompanyDTO();
 
-            var conversation = await _helper.GetConversationState<UserConversationDTO>(stepContext.Context, cancellationToken);
+            var conversation = await _helper.UserAccessor.GetAsync(stepContext.Context, () => new UserConversationDTO());
 
             var promptOptions = new PromptOptions
             {
@@ -110,11 +110,8 @@ namespace Microsoft.BotBuilderSamples
             userCompany = JsonConvert.DeserializeObject<UserCompanyDTO>(stepContext.Result?.ToString());
 
             // save the User Company data into the Conversation State
-            var conversation = await _helper.GetConversationState<UserConversationDTO>(stepContext.Context, cancellationToken);
+            var conversation = await _helper.UserAccessor.GetAsync(stepContext.Context, () => new UserConversationDTO());
             conversation.UserCompany = userCompany;
-
-            // save conversation into the document db
-            await this._helper.SaveConversationDB(stepContext.Context, cancellationToken);
 
             // begin the next dialog
             return await stepContext.BeginDialogAsync(nameof(UserSocioEconomicDialog), null, cancellationToken);
@@ -159,7 +156,7 @@ namespace Microsoft.BotBuilderSamples
                         ?.Select(i => i?.PartnerAdmin)
                         ?.ToList()
                     ),
-                WebUiAppUrl = _helper._appSettings.WebUiAppUrl,
+                WebUiAppUrl = _helper.AppSettings.WebUiAppUrl,
             };
         }
 

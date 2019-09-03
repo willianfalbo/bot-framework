@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Chatbot.API.DTO;
-using Chatbot.API.Extensions;
+using Chatbot.Api.DTO;
+using Chatbot.Api.Extensions;
 using Chatbot.Common.Extensions;
 using System.Collections.Generic;
-using Chatbot.API.Helpers;
+using Chatbot.Api.Helpers;
 
-namespace Microsoft.BotBuilderSamples
+namespace Chatbot.Api.Dialogs
 {
     public class FamilyIncomesDialog : CustomComponentDialog
     {
@@ -112,11 +112,8 @@ namespace Microsoft.BotBuilderSamples
         {
             var listOfIncomes = stepContext.Values[LIST_OF_INCOMES_STEP] as List<FamilyIncomeDTO>;
 
-            var conversation = await _helper.GetConversationState<UserConversationDTO>(stepContext.Context, cancellationToken);
+            var conversation = await _helper.UserAccessor.GetAsync(stepContext.Context, () => new UserConversationDTO());
             conversation.UserSocioEconomic.FamilyIncomes = listOfIncomes;
-
-            // save conversation into the document db
-            await this._helper.SaveConversationDB(stepContext.Context, cancellationToken);
 
             if ((bool)stepContext.Result)
                 return await stepContext.ReplaceDialogAsync(nameof(FamilyIncomesDialog), listOfIncomes, cancellationToken);
